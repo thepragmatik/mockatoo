@@ -3,10 +3,13 @@
   "version": "0.0.1",
   "description": "Mocking / Stubbing helper",
   "main": "lib/index.js",
+  "jest": {
+    "verbose": true
+  },
   "scripts": {
     "clean": "rimraf lib",
     "build": "babel src -d lib",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "repository": {
     "type": "git",
@@ -32,11 +35,22 @@
   "license": "MIT",
   "dependencies": {
     "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
+    "@babel/code-frame": "^7.0.0",
+    "@babel/generator": "^7.1.2",
+    "@babel/helpers": "^7.1.2",
+    "@babel/parser": "^7.1.2",
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.1.2",
     "@babel/template": "^7.0.0",
+    "@babel/traverse": "^7.1.0",
+    "@babel/types": "^7.1.2",
     "jest": "^23.6.0",
     "jest-cli": "^23.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0"
   }
 }
