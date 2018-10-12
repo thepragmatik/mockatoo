@@ -1,41 +1,85 @@
-import {transformFileSync} from '@babel/core';
-import fs from 'fs';
-import plugin from '../src/index';
-import {trim} from './util';
-import {proxy} from '../src/proxy';
+import {Mockatoo} from '../src/index';
+import {greet, greeting} from './test-module';
 
+describe('Referree', () => {
 
-describe('CommonJS Modules', () => {
+  describe('Should discover type on target', () => {
 
-  it('Referree should transform valid source', () => {
-    const options = {
-      babelrc: false,
-      plugins: [plugin]
-    };
+    it('in case the target is an object', () => {
+      const targetToMock = {};
 
-    const actual = transformFileSync('./test/fixtures/commonjs/actual.js', options).code;
-    // console.log(actual);
+      const proxy = new Mockatoo().mock(targetToMock);
 
-    const expected = fs.readFileSync('./test/fixtures/commonjs/expected.js').toString();
-    // console.log(expected);
+      expect(proxy.__getTargetType__()).toEqual('object');
+    });
 
-    expect(trim(actual)).toEqual(trim(expected));
+    it('in case the target is a function', () => {
+      const targetToMock = () => {
+      };
+
+      const proxy = new Mockatoo().mock(targetToMock);
+
+      expect(proxy.__getTargetType__()).toEqual('function');
+    });
+
+    it('in case the target is a class; it is evaluated to a function', () => {
+      class targetToMock {
+      }
+
+      const proxy = new Mockatoo().mock(targetToMock);
+
+      expect(proxy.__getTargetType__()).toEqual('function');
+    });
 
   });
 
-});
+  describe('should let unmocked functions be invoked on actual object', () => {
 
-describe('ES6 Proxy', () => {
+    it('unmocked function (within Object literal)', () => {
+      const targetToMock = {
+        greet: () => "Hello, World!"
+      };
 
-  it('should intercept all calls to the proxied Object', () => {
-    let greeter = {
-      greet: (msg) => {
-        console.log(msg);
-      }
-    };
+      const proxy = new Mockatoo().mock(targetToMock);
 
-    console.log('===================');
-    proxy(greeter).greet('hello');
+      expect(proxy.greet()).toEqual("Hello, World!");
+    });
+
+    it('mocked function (within Object literal)', () => {
+      const targetToMock = {
+        greet: () => "Hello, World!"
+      };
+
+      const proxy = new Mockatoo().mock(targetToMock);
+
+      proxy.__rewire__('greet', () => "Goodbye, World!");
+
+      expect(proxy.greet()).toEqual("Goodbye, World!");
+    });
+
+    it('mocked function (outside Object literal)', () => {
+      const targetToMock = () => "Hello, World!";
+
+      const proxy = new Mockatoo().mock(targetToMock);
+
+      proxy.__rewire__('targetToMock', () => "Goodbye, World!");
+
+      expect(proxy.targetToMock()).toEqual("Goodbye, World!");
+    });
+
+
+  });
+
+  describe('should be able to mock imported modules/file', () => {
+
+    it('mocked individual method from an imported file', () => {
+      const proxy = new Mockatoo().mock({greeting});
+
+      proxy.__rewire__('greeting', () => "Yokoso, World!");
+
+      expect(proxy.greeting()).toEqual("Yokoso, World!");
+    });
+
   });
 
 });
