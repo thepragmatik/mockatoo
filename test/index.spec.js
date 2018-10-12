@@ -57,6 +57,15 @@ describe('Referree', () => {
       expect(proxy.greet()).toEqual("Goodbye, World!");
     });
 
+    it('unmocked function (outside Object literal)', () => {
+      const targetToMock = () => "Hello, World!";
+
+      const proxy = new Mockatoo().mock(targetToMock);
+
+      expect(proxy.targetToMock()).toEqual("Hello, World!");
+    });
+
+
     it('mocked function (outside Object literal)', () => {
       const targetToMock = () => "Hello, World!";
 
@@ -78,6 +87,12 @@ describe('Referree', () => {
       proxy.__rewire__('greeting', () => "Yokoso, World!");
 
       expect(proxy.greeting()).toEqual("Yokoso, World!");
+    });
+
+    it('unmocked individual method from an imported file', () => {
+      const proxy = new Mockatoo().mock({greeting});
+
+      expect(proxy.greeting()).toEqual("Hello, World!");
     });
 
   });
