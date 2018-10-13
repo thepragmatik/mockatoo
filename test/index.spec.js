@@ -82,11 +82,14 @@ describe('Referree', () => {
   describe('should be able to mock imported modules/file', () => {
 
     it('mocked individual method from an imported file', () => {
-      const proxy = new Mockatoo().mock({greeting});
+      const proxy = new Mockatoo().mock({greeting, greet});
 
       proxy.__rewire__('greeting', () => "Yokoso, World!");
 
-      expect(proxy.greeting()).toEqual("Yokoso, World!");
+      // expect(proxy.greeting()).toEqual("Yokoso, World!");
+
+      expect(proxy.greet(proxy.greeting)).toEqual("Yokoso, World!");
+
     });
 
     it('unmocked individual method from an imported file', () => {
