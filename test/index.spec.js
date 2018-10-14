@@ -76,7 +76,6 @@ describe('Referree', () => {
       expect(proxy.targetToMock()).toEqual("Goodbye, World!");
     });
 
-
   });
 
   describe('should be able to mock imported modules/file', () => {
@@ -89,7 +88,6 @@ describe('Referree', () => {
       // expect(proxy.greeting()).toEqual("Yokoso, World!");
 
       expect(proxy.greet(proxy.greeting)).toEqual("Yokoso, World!");
-
     });
 
     it('unmocked individual method from an imported file', () => {
