@@ -1,5 +1,5 @@
 {
-  "name": "referree",
+  "name": "mockatoo",
   "version": "0.0.1",
   "description": "Mocking / Stubbing helper",
   "main": "lib/index.js",
